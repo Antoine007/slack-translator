@@ -1,3 +1,6 @@
+require('dotenv').load();
+var SLACK_FOOD_INCOMING_TOKENS = process.env.SLACK_FOOD_INCOMING_TOKENS;
+
 module.exports = function (req, res, next) {
   var userName = req.body.user_name;
   var price = req.body.text || 9999;
@@ -30,26 +33,29 @@ module.exports = function (req, res, next) {
     return 'Hi, ' + userName + " my Spidey Sense tells me you should eat " + result
   };
 
-  var botPayload = {
-    text : text()
-  };
+
+
+  // var botPayload = {
+  //   text : text()
+  // };
 
 
   // avoid infinite loop
   if (userName !== 'translate-this') {
-    var text_here = text()
-    request.post{
-      "https://hooks.slack.com/services/"+SLACK_FOOD_INCOMING_TOKENS,
+    // var text_here = text()
+    var text = text();
+    console.log(text)
+    res.status(200).json(
+      "https://hooks.slack.com/services/"+ SLACK_FOOD_INCOMING_TOKENS ,
       {
-        payload = {
+        payload: {
         "channel":"#random",
         "username":"lunch",
-        "text": text_here,
+        "text": text,
         "icon_emoji": ":fries:"
         }
-      }
-    }
-    return res.status(200).json(botPayload);
+      });
+    // return res.status(200).json(botPayload);
   } else {
     return res.status(200).end();
   }
