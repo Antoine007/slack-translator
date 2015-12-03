@@ -1,10 +1,15 @@
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
+require('dotenv').load();
+var CLIENT_ID = process.env.CLIENT_ID;
+var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var request = require('request');
+var Promise = require('promise');
 
 var ACCESS_TOKEN;
 var isAccessable = false;
 var queue = [];
+
+
+
 
 module.exports = {
 
@@ -17,35 +22,45 @@ module.exports = {
     ).then(trimMicrosoft);
   },
 
-  updateAccess: function () {
-    getAccessToken(CLIENT_ID, CLIENT_SECRET)
-      .then(JSON.parse)
-      .then((res) => {
-        trackExpiration(res.expires_in);
-        return res;
-      })
-      .then((res) => res.access_token)
-      .then((token) => ACCESS_TOKEN = token)
-      .then(() => isAccessable = true)
-      .catch(console.error.bind(console));
-  },
-
   requestAPICall: function(fn) {
+
+    console.log("isAccessable  " + isAccessable)
+    console.log("token  " + ACCESS_TOKEN)
 
 
     if (isAccessable) { fn(); }
     else { queue.push(fn); }
 
-  }
+  },
+
+  updateAccess: function () { return updateAccess() }
+
 
 };
 
+function updateAccess() {
+  // console.log("client_id: " + CLIENT_ID)
+  getAccessToken(CLIENT_ID, CLIENT_SECRET)
+  .then(console.log(JSON))
+  .then(JSON.parse)
+  .then((res) => {
+    trackExpiration(res.expires_in);
+    return res;
+  })
+  .then((res) => res.access_token)
+  .then((token) => ACCESS_TOKEN = res.access_token)
+  .then(() => isAccessable = true)
+  .then(dispatchQueue)
+  .catch(console.error.bind(console));
 
+  console.log("isAccessable" + isAccessable)
+
+}
 
 function getAccessToken(client_id, client_secret) {
 
   return new Promise((resolve, reject) => {
-
+    // console.log(client_id)
     request.post(
       'https://datamarket.accesscontrol.windows.net/v2/OAuth2-13',
       {
@@ -57,6 +72,12 @@ function getAccessToken(client_id, client_secret) {
       },
       (err, res, body) => err ? reject(err) : resolve(body));
   });
+}
+
+function dispatchQueue() {
+
+  queue.forEach((fn) => fn());
+  queue = [];
 }
 
 function trackExpiration(time) {
