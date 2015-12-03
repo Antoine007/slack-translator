@@ -6,13 +6,14 @@ module.exports = function (req, res, next) {
                  "a CoffeeLabs Tartine": 5,
                  "a CoffeeLabs Salad": 9,
                  "a Subway": 7,
+                 "a Wok Away": 11,
                  "from the Grandbazar": 4.5,
                  "an UrbanWrap": 5.5,
                  "McDonalds": 7,
                  "at Hema": 5.5,
                  "... nah, no eating today, water is enough": 0,
                  "at the 2 Michelin stars on the MAS": 120,
-                 "Le Dome", 80
+                 "Le Dome": 80
                 };
 
   var selection = [];
@@ -26,7 +27,7 @@ module.exports = function (req, res, next) {
       }
     }
     var result = selection[Math.floor(Math.random() * selection.length)];
-    return 'Hi, ' + userName + " my spidey sense tells me you should eat " + result
+    return 'Hi, ' + userName + " my Spidey Sense tells me you should eat " + result
   };
 
   var botPayload = {
