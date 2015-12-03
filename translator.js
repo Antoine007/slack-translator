@@ -3,7 +3,7 @@ var request = require('request');
 module.exports = function (req, res, next) {
   var text;
   var botPayload = {};
-  translate(req.body.text);
+  botPayload.text = translate(req.body.text);
   botPayload.username = 'translate-this';
   botPayload.channel = req.body.channel_id;
 
@@ -22,7 +22,7 @@ module.exports = function (req, res, next) {
 };
 
 function translate (text) {
-  botPayload.text = req.body.user_name + text
+  text = text
 }
 
 function send (payload, callback) {
