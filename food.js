@@ -16,7 +16,7 @@ module.exports = function (req, res, next) {
                  "at Hema": 5.5,
                  "... nah, no eating today, water is enough": 0,
                  "at the 2 Michelin stars on the MAS": 120,
-                 "Le Dome": 80
+                 "at Le Dome": 80
                 };
 
   var selection = [];
@@ -44,7 +44,7 @@ module.exports = function (req, res, next) {
   if (userName !== 'translate-this') {
     // var text_here = text()
     var text = text();
-    console.log(text)
+    // console.log(text)
     res.status(200).json(
       "https://hooks.slack.com/services/"+ SLACK_FOOD_INCOMING_TOKENS ,
       {
@@ -55,7 +55,6 @@ module.exports = function (req, res, next) {
         "icon_emoji": ":fries:"
         }
       });
-    // return res.status(200).json(botPayload);
   } else {
     return res.status(200).end();
   }
