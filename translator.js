@@ -1,4 +1,5 @@
 var request = require('request');
+var translationEngine = require('./translation_engine');
 
 module.exports = function (req, res, next) {
 
@@ -23,7 +24,11 @@ module.exports = function (req, res, next) {
 };
 
 function translate (text) {
-  return text + " _is what you meant!_ :flag-uk: please! Thanks!    "
+
+  translationEngine.updateAccess();
+  translationEngine.requestAPICall(() => {
+    return translationEngine.t(text); + " _is what you meant!_ :uk: please! Thanks!"
+  })
 }
 
 function send (payload) {
