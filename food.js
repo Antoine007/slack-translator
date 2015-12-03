@@ -1,5 +1,6 @@
 require('dotenv').load();
 var SLACK_FOOD_INCOMING_TOKENS = process.env.SLACK_FOOD_INCOMING_TOKENS;
+var request = require('request');
 
 module.exports = function (req, res, next) {
   var userName = req.body.user_name;
@@ -33,11 +34,33 @@ module.exports = function (req, res, next) {
     return 'Hi, ' + userName + " my Spidey Sense tells me you should eat " + result
   };
 
+  function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
 
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
 
-  // var botPayload = {
-  //   text : text()
-  // };
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  var botPayload = {
+    text : text()
+  };
 
 
   // avoid infinite loop
@@ -55,6 +78,7 @@ module.exports = function (req, res, next) {
         "icon_emoji": ":fries:"
         }
       });
+    post(uri, botPayload);
   } else {
     return res.status(200).end();
   }
