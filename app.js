@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var hellobot = require('./hellobot');
 var translator = require('./translator');
+var food = require('./food');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -24,3 +25,4 @@ app.listen(port, function () {
 
 app.post('/translator', translator);
 app.post('/hello', hellobot);
+app.post('/food', food);

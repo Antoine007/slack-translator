@@ -39,20 +39,17 @@ module.exports = {
 };
 
 function updateAccess() {
-  // console.log("client_id: " + CLIENT_ID)
   getAccessToken(CLIENT_ID, CLIENT_SECRET)
-  .then(console.log(JSON))
-  .then(JSON.parse)
-  .then((res) => {
-    trackExpiration(res.expires_in);
-    return res;
-  })
-  .then((res) => res.access_token)
-  .then((token) => ACCESS_TOKEN = res.access_token)
-  .then(() => isAccessable = true)
-  .then(dispatchQueue)
-  .catch(console.error.bind(console));
-
+    .then(JSON.parse)
+    .then((res) => {
+      trackExpiration(res.expires_in);
+      return res;
+    })
+    .then((res) => res.access_token)
+    .then((token) => ACCESS_TOKEN = token)
+    .then(() => isAccessable = true)
+    .then(dispatchQueue)
+    .catch(console.error.bind(console));
   console.log("isAccessable" + isAccessable)
 
 }
