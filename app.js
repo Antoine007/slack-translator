@@ -22,4 +22,5 @@ app.listen(port, function () {
   console.log('Slack bot listening on port ' + port);
 });
 
+app.post('/translator', translator);
 app.post('/hello', hellobot);
