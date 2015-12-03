@@ -1,6 +1,6 @@
 module.exports = function (req, res, next) {
   var userName = req.body.user_name;
-  var price = req.body.price || 9999;
+  var price = req.body.text || 9999;
 
   var places = { "a CoffeeLabs Quiche": 7,
                  "a CoffeeLabs Tartine": 5,
@@ -37,6 +37,18 @@ module.exports = function (req, res, next) {
 
   // avoid infinite loop
   if (userName !== 'translate-this') {
+    var text_here = text()
+    request.post{
+      "https://hooks.slack.com/services/"+SLACK_FOOD_INCOMING_TOKENS,
+      {
+        payload = {
+        "channel":"#random",
+        "username":"lunch",
+        "text": text_here,
+        "icon_emoji": ":fries:"
+        }
+      }
+    }
     return res.status(200).json(botPayload);
   } else {
     return res.status(200).end();
