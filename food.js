@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
   var request = require('request');
   var userName = req.body.user_name;
   var price = req.body.text || 9999;
-  var channel = req.body.channel_name || "#random";
+  var channel = "#" + req.body.channel_name || "#random";
 
   var places = { "a CoffeeLabs Quiche": 7,
                  "a CoffeeLabs Tartine": 5,
