@@ -3,8 +3,10 @@ var SLACK_FOOD_INCOMING_TOKENS = process.env.SLACK_FOOD_INCOMING_TOKENS;
 var request = require('request');
 
 module.exports = function (req, res, next) {
+  var request = require('request');
   var userName = req.body.user_name;
   var price = req.body.text || 9999;
+  var channel = req.body.channel_name || "#random";
 
   var places = { "a CoffeeLabs Quiche": 7,
                  "a CoffeeLabs Tartine": 5,
@@ -34,51 +36,35 @@ module.exports = function (req, res, next) {
     return 'Hi, ' + userName + " my Spidey Sense tells me you should eat " + result
   };
 
-  function post(path, params, method) {
-    method = method || "post"; // Set method to post by default if not specified.
-
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
-
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-
-            form.appendChild(hiddenField);
-         }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-  }
-
-  var botPayload = {
-    text : text()
-  };
+  // var botPayload = {
+  //   text : text()
+  // };
 
 
   // avoid infinite loop
   if (userName !== 'translate-this') {
-    // var text_here = text()
     var text = text();
-    // console.log(text)
-    res.status(200).json(
-      "https://hooks.slack.com/services/"+ SLACK_FOOD_INCOMING_TOKENS ,
-      {
-        payload: {
-        "channel":"#random",
-        "username":"lunch",
+    var url = "https://hooks.slack.com/services/"+ SLACK_FOOD_INCOMING_TOKENS;
+    var payload = JSON.stringify({
+        "channel": channel,
+        "username": "lunch",
         "text": text,
         "icon_emoji": ":fries:"
-        }
-      });
-    post(uri, botPayload);
+    });
+
+    var options = {
+      uri : url,
+      form : payload
+    };
+
+    request.post(options, function(error, response, body){
+      if (!error && response.statusCode == 200) {
+        console.log(body.name);
+      } else {
+        console.log('error: '+ response.statusCode + body);
+      }
+    });
+
   } else {
     return res.status(200).end();
   }
